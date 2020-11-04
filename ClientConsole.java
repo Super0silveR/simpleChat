@@ -80,7 +80,7 @@ public class ClientConsole implements ChatIF
   {
     try
     {
-
+    	
       String message;
 
       while (true) 
@@ -118,17 +118,23 @@ public class ClientConsole implements ChatIF
   public static void main(String[] args) 
   {
     String host = "";
-
+    int port = 0;
+    
+    //Scanner u = new Scanner(System.in); 
+    //System.out.println("Veuiller entrez le port de connection:");
+    //port = u.nextInt();
 
     try
     {
       host = args[0];
+      port = Integer.parseInt(args[1]);
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
       host = "localhost";
+      port = DEFAULT_PORT;
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+    ClientConsole chat= new ClientConsole(host, port);
     chat.accept();  //Wait for console data
   }
 }
