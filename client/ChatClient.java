@@ -43,7 +43,7 @@ public class ChatClient extends AbstractClient
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
-    openConnection();
+    openConnection();  
   }
 
   
@@ -62,13 +62,42 @@ public class ChatClient extends AbstractClient
   /**
    * This method handles all data coming from the UI            
    *
-   * @param message The message from the UI.    
+   * @param message The message from the555 UI.    
    */
   public void handleMessageFromClientUI(String message)
   {
     try
     {
-      sendToServer(message);
+    	if(message.contentEquals("#quit")) {
+    		clientUI.display(">SYS> Terminating Client...");
+    		quit();
+    	} else if (message.contentEquals("#logoff")) {
+    		clientUI.display(">SYS> Deconecting Client.");
+    		closeConnection();
+    	} else if (message.startsWith("#sethost") && !(isConnected())) {
+    		clientUI.display(">SYS> setting host "+message.split(" ")[1]);
+    		setHost(message.split(" ")[1]);
+    	} else if (message.startsWith("#setport") && !(isConnected())) {
+    		clientUI.display(">SYS> setting port "+message.split(" ")[1]);
+    		setPort(Integer.parseInt(message.split(" ")[1]));
+    	} else if (message.contentEquals("#login") && !(isConnected())) {
+    		clientUI.display(">SYS> Connecting to "+getHost()+"/"+getPort());
+    		openConnection();
+    	} else if (message.contentEquals("#gethost")) {
+    		clientUI.display(">SYS> Returning host");
+    		clientUI.display(getHost());
+    	} else if (message.contentEquals("#getport")) {
+    		clientUI.display(">SYS> returning port");
+    		clientUI.display(Integer.toString(getPort()));
+    	}
+    	
+    	else if(message.startsWith("SERVER MSG>#quit"))
+    	
+    	
+    	
+    	else {
+    		sendToServer(message);
+    	}
     }
     catch(IOException e)
     {
@@ -77,6 +106,13 @@ public class ChatClient extends AbstractClient
       quit();
     }
   }
+  
+  
+  protected void connectionException(Exception exception) {
+	  clientUI.display("Connection to server has been lost, closing client.");
+	  quit();
+  }
+  
   
   /**
    * This method terminates the client.
